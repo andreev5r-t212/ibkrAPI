@@ -8,69 +8,73 @@ account = "U9451292"
 base_url = "https://localhost:5001/v1/api"
 
 
-def getPortfolioSummary(account):
-    endpoint = f"portfolio/{account}/summary"
+def getPortfolioSummary(account_id):
+    endpoint = f"portfolio/{account_id}/summary"
     try:
-        # The 'verify=False' parameter is crucial to ignore the SSL certificate
-        # that the local IBKR API gateway is using.
         sum_req = requests.get(f"{base_url}/{endpoint}", verify=False)
-        sum_req.raise_for_status()  # This will raise an HTTPError for bad responses (4xx or 5xx)
+        sum_req.raise_for_status()
+        return sum_req.json()
+    except requests.exceptions.RequestException:
+        return None
 
-        sum_json = json.dumps(sum_req.json(), indent=2)
-
-        print(f"Status Code: {sum_req.status_code}")
-        print(sum_json)
-
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
 
 def getAccountSummary(accountId):
     endpoint = f"iserver/account/{accountId}/summary"
     try:
         resp = requests.get(f"{base_url}/{endpoint}", verify=False)
         resp.raise_for_status()
-        resp_json = json.dumps(resp.json(), indent=2)
-        print(f"Status Code: {resp.status_code}")
-        print(resp_json)
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        return resp.json()
+    except requests.exceptions.RequestException:
+        return None
 
 
 def getAccounts():
     endpoint = f"iserver/accounts"
     try:
         sum_req = requests.get(f"{base_url}/{endpoint}", verify=False)
-        sum_req.raise_for_status()  # This will raise an HTTPError for bad responses (4xx or 5xx)
+        sum_req.raise_for_status()
+        return sum_req.json()
+    except requests.exceptions.RequestException:
+        return None
 
-        sum_json = json.dumps(sum_req.json(), indent=2)
-
-        print(f"Status Code: {sum_req.status_code}")
-        print(sum_json)
-
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
 
 def isAuthenticated():
     endpoint = "iserver/auth/status"
     headers = {
         "Host": "api.ibkr.com",
         "Accept": "*/*",
-        "User-Agent": "MyPythonApp/1.0",  # Example of a custom User-Agent
+        "User-Agent": "MyPythonApp/1.0",
         "Connection": "keep-alive"
     }
 
-
     try:
-        auth_req = requests.get(f"{base_url}/{endpoint}",headers=headers ,verify=False)
-        auth_req.raise_for_status()  # This will raise an HTTPError for bad responses (4xx or 5xx)
+        auth_req = requests.get(f"{base_url}/{endpoint}", headers=headers, verify=False)
+        auth_req.raise_for_status()
+        return auth_req.json()
+    except requests.exceptions.RequestException:
+        return None
 
-        auth_json = json.dumps(auth_req.json(), indent=2)
-
-        print(f"Status Code: {auth_req.status_code}")
-        print(auth_json)
-
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
-    getPortfolioSummary(account)
+    print("Running Account Summary script...")
+
+    auth_status = isAuthenticated()
+    if auth_status:
+        print("\nAuthentication Status:")
+        print(json.dumps(auth_status, indent=2))
+    else:
+        print("Authentication failed.")
+
+    accts = getAccounts()
+    if accts:
+        print("\nAccounts:")
+        print(json.dumps(accts, indent=2))
+    else:
+        print("Failed to get accounts.")
+
+    portfolio_summary = getPortfolioSummary(account)
+    if portfolio_summary:
+        print("\nPortfolio Summary:")
+        print(json.dumps(portfolio_summary, indent=2))
+    else:
+        print("Failed to get portfolio summary.")
