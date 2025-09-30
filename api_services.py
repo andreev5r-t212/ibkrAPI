@@ -55,6 +55,16 @@ def isAuthenticated():
         return None
 
 
+def getContractInfo(conid):
+    endpoint = f"iserver/contract/{conid}/info"
+    try:
+        info_req = requests.get(f"{base_url}/{endpoint}", verify=False)
+        info_req.raise_for_status()
+        return info_req.json()
+    except requests.exceptions.RequestException:
+        return None
+
+
 if __name__ == "__main__":
     print("Running Account Summary script...")
 
@@ -78,3 +88,10 @@ if __name__ == "__main__":
         print(json.dumps(portfolio_summary, indent=2))
     else:
         print("Failed to get portfolio summary.")
+
+    contract_info = getContractInfo("265598")
+    if contract_info:
+        print("\nContract Info:")
+        print(json.dumps(contract_info, indent=2))
+    else:
+        print("Failed to get contract info.")

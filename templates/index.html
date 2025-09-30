@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IBKR API Web App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mb-4">IBKR API Web App</h1>
+
+        <div class="d-flex justify-content-center mb-4">
+            <div class="input-group w-25 me-3">
+                <span class="input-group-text">Account ID:</span>
+                <input type="text" id="accountId" class="form-control" value="U9451292">
+            </div>
+            <button id="portfolioBtn" class="btn btn-primary me-2">Get Portfolio Summary</button>
+            <button id="accountsBtn" class="btn btn-primary me-2">Get Accounts</button>
+            <button id="authBtn" class="btn btn-primary me-2">Check Auth Status</button>
+            <button id="clearBtn" class="btn btn-danger">Clear</button>
+        </div>
+
+        <div class="d-flex justify-content-center mb-4">
+            <div class="input-group w-25 me-3">
+                <span class="input-group-text">Contract ID:</span>
+                <input type="text" id="conidInput" class="form-control" value="148782715">
+            </div>
+            <button id="contractBtn" class="btn btn-info me-2">Get Contract Info</button>
+        </div>
+
+        <div id="status" class="text-center mb-3">Ready.</div>
+
+        <div id="output"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
